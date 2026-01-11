@@ -1,0 +1,237 @@
+<div class="portal-wrapper">
+  <!-- HEADER -->
+  <header class="portal-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+        <h1>Portal de Gestión</h1>
+      </div>
+      <button class="btn-salir" routerLink="/">Salir del Portal</button>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="navigation-tabs">
+    <button class="tab" [class.active]="pestanaActiva === 'registrar'" (click)="cambiarPestana('registrar')">
+      REGISTRAR ESTUDIANTE
+    </button>
+
+    <button class="tab" [class.active]="pestanaActiva === 'estudiantes'" (click)="cambiarPestana('estudiantes')">
+      ESTUDIANTES REGISTRADOS
+    </button>
+  </nav>
+
+  <main class="portal-content">
+
+    <!-- ================= REGISTRAR / EDITAR ================= -->
+    <div class="tab-content" *ngIf="pestanaActiva === 'registrar'">
+      <div class="content-header">
+        <h2>{{ editando ? 'Editar Estudiante' : 'Registrar Nuevo Estudiante' }}</h2>
+        <p>Complete el formulario con los datos del estudiante</p>
+      </div>
+
+      <div class="form-container">
+        <form [formGroup]="estudiantesForm" (ngSubmit)="save($event)">
+          <p>
+            Cédula<br>
+            <input type="text" formControlName="ci">
+          </p>
+          <div class="errors" *ngIf="estudiantesForm.get('ci')?.touched && estudiantesForm.get('ci')?.errors">
+
+            <p *ngIf="estudiantesForm.get('ci')?.hasError('required')">
+              Campo obligatorio
+            </p>
+
+            <p *ngIf="estudiantesForm.get('ci')?.hasError('pattern')">
+              Solo se permiten números
+            </p>
+
+            <p *ngIf="estudiantesForm.get('ci')?.hasError('minlength')">
+              Debe tener mínimo 10 dígitos
+              ({{ estudiantesForm.get('ci')?.value?.length || 0 }}/10)
+            </p>
+
+            <p *ngIf="estudiantesForm.get('ci')?.hasError('maxlength')">
+              La cédula debe tener exactamente 10 dígitos
+            </p>
+
+          </div>
+
+
+          <p>
+            Nombres<br>
+            <input type="text" formControlName="names">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('names')?.touched && estudiantesForm.get('names')?.hasError('required')">
+            <p>Campo obligatorio</p>
+          </div>
+
+          <p>
+            Apellidos<br>
+            <input type="text" formControlName="lastNames">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('lastNames')?.touched && estudiantesForm.get('lastNames')?.hasError('required')">
+            <p>Campo obligatorio</p>
+          </div>
+
+          <p>
+            Email<br>
+            <input type="email" formControlName="email">
+          </p>
+          <div class="errors" *ngIf="estudiantesForm.get('email')?.touched && estudiantesForm.get('email')?.errors">
+            <p *ngIf="estudiantesForm.get('email')?.hasError('required')">Campo obligatorio</p>
+            <p *ngIf="estudiantesForm.get('email')?.hasError('email')">Email no válido</p>
+          </div>
+
+          <p>
+            Teléfono<br>
+            <input type="text" formControlName="phone">
+          </p>
+          <div class="errors" *ngIf="estudiantesForm.get('phone')?.touched && estudiantesForm.get('phone')?.errors">
+
+            <p *ngIf="estudiantesForm.get('phone')?.hasError('required')">
+              Campo obligatorio
+            </p>
+
+            <p *ngIf="estudiantesForm.get('phone')?.hasError('pattern')">
+              Solo se permiten números
+            </p>
+
+            <p *ngIf="estudiantesForm.get('phone')?.hasError('minlength')">
+              Debe tener mínimo 10 dígitos
+              ({{ estudiantesForm.get('phone')?.value?.length || 0 }}/10)
+            </p>
+
+            <p *ngIf="estudiantesForm.get('phone')?.hasError('maxlength')">
+              No debe exceder los 10 dígitos
+            </p>
+
+          </div>
+
+
+          <p>
+            Dirección<br>
+            <input type="text" formControlName="address">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('address')?.touched && estudiantesForm.get('address')?.hasError('required')">
+            <p>Campo obligatorio</p>
+          </div>
+
+
+          <p>
+            Fecha Nacimiento<br>
+            <input type="date" formControlName="birthDate">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('birthDate')?.touched && estudiantesForm.get('birthDate')?.hasError('required')">
+            <p>Debe seleccionar una fecha de nacimiento</p>
+          </div>
+
+
+          <p>
+            Carrera<br>
+            <input type="text" formControlName="career">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('career')?.touched && estudiantesForm.get('career')?.hasError('required')">
+            <p>Campo obligatorio</p>
+          </div>
+
+
+          <p>
+            Semestre<br>
+            <input type="text" formControlName="semester">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('semester')?.touched && estudiantesForm.get('semester')?.errors">
+            <p *ngIf="estudiantesForm.get('semester')?.hasError('required')">
+              Campo obligatorio
+            </p>
+            <p *ngIf="estudiantesForm.get('semester')?.hasError('pattern')">
+              Solo se permiten números
+            </p>
+          </div>
+
+
+          <p>
+            Fecha Registro<br>
+            <input type="date" formControlName="registerDate">
+          </p>
+          <div class="errors"
+            *ngIf="estudiantesForm.get('registerDate')?.touched && estudiantesForm.get('registerDate')?.hasError('required')">
+            <p>Debe seleccionar la fecha de registro</p>
+          </div>
+
+
+          <button type="submit" class="btn-crear" [disabled]="estudiantesForm.invalid">
+            {{ editando ? 'Actualizar Estudiante' : 'Crear Estudiante' }}
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= LISTADO ================= -->
+    <div class="tab-content" *ngIf="pestanaActiva === 'estudiantes'">
+      <div class="content-header">
+        <h2>Estudiantes Registrados</h2>
+        <p>Gestiona y visualiza todos los estudiantes</p>
+      </div>
+
+      <div class="table-container">
+        <div class="table-actions">
+          <button class="btn-add" (click)="cambiarPestana('registrar')">
+            + Agregar Estudiante
+          </button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Carrera</th>
+              <th>Semestre</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let est of estudiantes">
+              <td>{{ est.ci }}</td>
+              <td>{{ est.names }}</td>
+              <td>{{ est.lastNames }}</td>
+              <td>{{ est.email }}</td>
+              <td>{{ est.phone }}</td>
+              <td>{{ est.career }}</td>
+              <td>{{ est.semester }}</td>
+              <td class="actions-cell">
+                <button class="btn-action btn-edit" (click)="editar(est)">
+                  Editar
+                </button>
+                <button class="btn-action btn-delete" (click)="eliminar(est.id)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="table-footer">
+          <p>Mostrando {{ estudiantes.length }} estudiantes</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>

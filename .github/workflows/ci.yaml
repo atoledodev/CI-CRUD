@@ -1,0 +1,53 @@
+name: Quick CI
+
+# Pipeline más rápido para desarrollo
+on:
+  push:
+    branches-ignore: [main, master]
+
+jobs:
+  quick-check:
+    name: Quick Check
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project:
+          [
+            { name: "backend", path: "./CRUDBackend/studentsRest" },
+            { name: "frontend", path: "./CRUDFrontend" },
+          ]
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.project.path }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "${{ matrix.project.path }}/package-lock.json"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Run tests (backend)
+        if: matrix.project.name == 'backend'
+        run: npm run test -- --passWithNoTests
+
+      - name: Run tests (frontend)
+        if: matrix.project.name == 'frontend'
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+        continue-on-error: true
+
+      - name: Build
+        run: npm run build
